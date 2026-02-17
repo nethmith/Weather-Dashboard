@@ -1,42 +1,35 @@
-# sv
+# Weather Dashboard
 
-Everything you need to build a Svelte project, powered by [`sv`](https://github.com/sveltejs/cli).
+A modern weather dashboard built with **SvelteKit**, **Tailwind CSS**, and the **OpenWeatherMap API**.
 
-## Creating a project
+## Getting Started
 
-If you're seeing this, you've probably already done this step. Congrats!
+### Prerequisites
+- [Node.js](https://nodejs.org/) (v18+)
+- An [OpenWeatherMap](https://openweathermap.org/api) API key (free tier)
 
-```sh
-# create a new project
-npx sv create my-app
+### Installation
+
+```bash
+# Install dependencies
+npm install
+
+# Copy the env example and add your API key
+cp .env.example .env.local
+# Then edit .env.local and replace your_api_key_here with your real key
 ```
 
-To recreate this project with the same configuration:
+### Development
 
-```sh
-# recreate this project
-npx sv create --template minimal --types ts --add eslint prettier --no-install .
-```
-
-## Developing
-
-Once you've created a project and installed dependencies with `npm install` (or `pnpm install` or `yarn`), start a development server:
-
-```sh
+```bash
 npm run dev
-
-# or start the server and open the app in a new browser tab
-npm run dev -- --open
 ```
 
-## Building
+Open [http://localhost:5173](http://localhost:5173) in your browser.
 
-To create a production version of your app:
+## Tech Stack
 
-```sh
-npm run build
-```
-
-You can preview the production build with `npm run preview`.
-
-> To deploy your app, you may need to install an [adapter](https://svelte.dev/docs/kit/adapters) for your target environment.
+- **SvelteKit** — Full-stack Svelte framework
+- **Tailwind CSS v4** — Utility-first CSS
+- **OpenWeatherMap API** — Weather data provider
+- **TypeScript** — Type safety
