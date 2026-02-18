@@ -1,80 +1,90 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import { isApiKeyConfigured, getCurrentWeatherUrl } from '$lib/weather';
+	import type { WeatherData } from '$lib/types';
 
-	let apiStatus = $state<'checking' | 'configured' | 'missing'>('checking');
-	let testResult = $state<string>('');
+	let weatherData = $state<WeatherData | null>(null);
+	let error = $state<string | null>(null);
+	let loading = $state(true);
+
+	// Hardcoded city for Day 3
+	const DEFAULT_CITY = 'Colombo';
 
 	onMount(async () => {
 		if (!isApiKeyConfigured()) {
-			apiStatus = 'missing';
-			testResult = 'API key is not configured. Please add your key to .env.local';
+			error = 'API key is not configured. Please add your key to .env.local';
+			loading = false;
 			return;
 		}
 
-		apiStatus = 'configured';
-
-		// Quick test fetch with a known city
 		try {
-			const url = getCurrentWeatherUrl('Colombo');
+			console.log(`Fetching weather for ${DEFAULT_CITY}...`);
+			const url = getCurrentWeatherUrl(DEFAULT_CITY);
 			const res = await fetch(url);
 			const data = await res.json();
 
 			if (res.ok) {
-				testResult = `✅ API connected! Current temp in ${data.name}: ${Math.round(data.main.temp)}°C — ${data.weather[0].description}`;
-				console.log('OpenWeatherMap response:', data);
+				weatherData = data as WeatherData;
+				console.log('Weather data received:', weatherData);
 			} else {
-				testResult = `⚠️ API responded with error: ${data.message}`;
-				console.error('API error:', data);
+				error = `Error: ${data.message}`;
+				console.error('API Error:', data);
 			}
 		} catch (err) {
-			testResult = `❌ Network error: ${err instanceof Error ? err.message : 'Unknown error'}`;
+			error = `Network error: ${err instanceof Error ? err.message : 'Unknown error'}`;
 			console.error('Fetch failed:', err);
+		} finally {
+			loading = false;
 		}
 	});
 </script>
 
 <div class="flex flex-col items-center justify-center text-center py-16 px-4 gap-8">
 	<!-- Hero -->
-	<h2 class="text-4xl md:text-5xl font-extrabold text-transparent bg-clip-text bg-gradient-to-br from-slate-700 to-slate-500 drop-shadow-sm">
+	<h2
+		class="text-4xl md:text-5xl font-extrabold text-transparent bg-clip-text bg-gradient-to-br from-slate-700 to-slate-500 drop-shadow-sm"
+	>
 		Check the Weather
 	</h2>
 	<p class="text-lg text-slate-600 max-w-lg leading-relaxed">
 		Get real-time weather updates and a 5-day forecast for any city worldwide.
 	</p>
 
-	<!-- API Status Card -->
-	<div class="w-full max-w-md rounded-2xl border border-white/40 bg-white/60 backdrop-blur-lg shadow-lg p-6 text-left space-y-4">
-		<h3 class="text-sm font-semibold uppercase tracking-wider text-slate-400">API Status</h3>
+	<!-- Status & Data Display -->
+	<div
+		class="w-full max-w-lg rounded-2xl border border-white/40 bg-white/60 backdrop-blur-lg shadow-lg p-6 text-left space-y-4"
+	>
+		{#if loading}
+			<div class="flex items-center gap-3 animate-pulse">
+				<div class="h-4 w-4 rounded-full bg-blue-400"></div>
+				<span class="text-slate-600 font-medium">Fetching weather data...</span>
+			</div>
+		{:else if error}
+			<div
+				class="flex items-start gap-3 text-red-600 bg-red-50 p-4 rounded-lg border border-red-100"
+			>
+				<span class="text-xl">⚠️</span>
+				<p class="font-medium">{error}</p>
+			</div>
+		{:else if weatherData}
+			<div class="space-y-2">
+				<div class="flex items-center gap-2 mb-4">
+					<span class="h-3 w-3 rounded-full bg-emerald-500"></span>
+					<span class="text-sm font-bold uppercase tracking-wider text-slate-500">
+						Data Received for {weatherData.name}
+					</span>
+				</div>
 
-		{#if apiStatus === 'checking'}
-			<div class="flex items-center gap-3">
-				<span class="relative flex h-3 w-3">
-					<span class="absolute inline-flex h-full w-full animate-ping rounded-full bg-amber-400 opacity-75"></span>
-					<span class="relative inline-flex h-3 w-3 rounded-full bg-amber-500"></span>
-				</span>
-				<span class="text-slate-600">Checking API connection…</span>
-			</div>
-		{:else if apiStatus === 'configured'}
-			<div class="flex items-center gap-3">
-				<span class="relative flex h-3 w-3">
-					<span class="relative inline-flex h-3 w-3 rounded-full bg-emerald-500"></span>
-				</span>
-				<span class="text-slate-700 font-medium">API key detected</span>
-			</div>
-		{:else}
-			<div class="flex items-center gap-3">
-				<span class="relative flex h-3 w-3">
-					<span class="relative inline-flex h-3 w-3 rounded-full bg-red-500"></span>
-				</span>
-				<span class="text-slate-700 font-medium">API key missing</span>
-			</div>
-		{/if}
+				<div
+					class="bg-slate-900 text-green-400 p-4 rounded-lg font-mono text-xs overflow-x-auto shadow-inner border border-slate-700"
+				>
+					<pre>{JSON.stringify(weatherData, null, 2)}</pre>
+				</div>
 
-		{#if testResult}
-			<p class="text-sm text-slate-600 bg-slate-100/80 rounded-lg p-3 leading-relaxed">
-				{testResult}
-			</p>
+				<p class="text-center text-sm text-slate-500 mt-2">
+					Check the browser console (F12) for the object details!
+				</p>
+			</div>
 		{/if}
 	</div>
 </div>
