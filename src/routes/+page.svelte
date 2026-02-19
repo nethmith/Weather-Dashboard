@@ -68,11 +68,11 @@
 	<header class="text-center space-y-6 w-full max-w-lg">
 		<div class="space-y-2">
 			<h2
-				class="text-3xl md:text-5xl font-extrabold text-transparent bg-clip-text bg-gradient-to-br from-slate-700 to-slate-500 drop-shadow-sm"
+				class="text-3xl md:text-5xl font-extrabold text-transparent bg-clip-text bg-gradient-to-br from-slate-700 to-slate-500 drop-shadow-sm dark:from-slate-200 dark:to-slate-400"
 			>
 				Check the Weather
 			</h2>
-			<p class="text-lg text-slate-600">Real-time weather updates worldwide.</p>
+			<p class="text-lg text-slate-600 dark:text-slate-400">Real-time weather updates worldwide.</p>
 		</div>
 
 		<!-- Search Form -->
@@ -81,7 +81,7 @@
 				type="text"
 				bind:value={query}
 				placeholder="Search city..."
-				class="w-full pl-6 pr-14 py-4 rounded-full bg-white/80 backdrop-blur-md border border-white/40 shadow-lg text-slate-700 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-400/50 transition-all font-medium text-lg"
+				class="w-full pl-6 pr-14 py-4 rounded-full bg-white/80 dark:bg-slate-800/80 backdrop-blur-md border border-white/40 dark:border-white/10 shadow-lg text-slate-700 dark:text-slate-200 placeholder:text-slate-400 dark:placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-400/50 transition-all font-medium text-lg"
 			/>
 			<button
 				type="submit"
@@ -128,15 +128,15 @@
 		{#if loading && !weatherData}
 			<!-- Initial Loading Skeleton -->
 			<div
-				class="flex flex-col items-center justify-center p-12 rounded-3xl bg-white/40 border border-white/40 shadow-lg backdrop-blur-md animate-pulse h-96"
+				class="flex flex-col items-center justify-center p-12 rounded-3xl bg-white/40 dark:bg-slate-800/40 border border-white/40 dark:border-white/5 shadow-lg backdrop-blur-md animate-pulse h-96"
 			>
-				<div class="h-20 w-20 mb-6 rounded-full bg-slate-200/50"></div>
-				<div class="h-8 w-48 rounded-full bg-slate-200/50 mb-4"></div>
-				<div class="h-4 w-32 rounded-full bg-slate-200/50"></div>
+				<div class="h-20 w-20 mb-6 rounded-full bg-slate-200/50 dark:bg-slate-700/50"></div>
+				<div class="h-8 w-48 rounded-full bg-slate-200/50 dark:bg-slate-700/50 mb-4"></div>
+				<div class="h-4 w-32 rounded-full bg-slate-200/50 dark:bg-slate-700/50"></div>
 			</div>
 		{:else if error}
 			<div
-				class="flex items-center gap-4 text-red-700 bg-red-50/90 backdrop-blur-md p-6 rounded-2xl border border-red-200 shadow-lg animate-in fade-in slide-in-from-bottom-4 duration-300"
+				class="flex items-center gap-4 text-red-700 dark:text-red-300 bg-red-50/90 dark:bg-red-900/30 backdrop-blur-md p-6 rounded-2xl border border-red-200 dark:border-red-800 shadow-lg animate-in fade-in slide-in-from-bottom-4 duration-300"
 			>
 				<span class="text-3xl">⚠️</span>
 				<div>
