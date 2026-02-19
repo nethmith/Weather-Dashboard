@@ -9,7 +9,8 @@ export interface WeatherData {
 		description: string;
 		icon: string;
 	}>;
-	base: string;
+	// Optional fields (forecast items might not have all these)
+	base?: string;
 	main: {
 		temp: number;
 		feels_like: number;
@@ -19,6 +20,7 @@ export interface WeatherData {
 		humidity: number;
 		sea_level?: number;
 		grnd_level?: number;
+		temp_kf?: number; // Only in forecast
 	};
 	visibility: number;
 	wind: {
@@ -30,15 +32,38 @@ export interface WeatherData {
 		all: number;
 	};
 	dt: number;
-	sys: {
+	dt_txt?: string; // Only in forecast
+	sys?: {          // Different in forecast vs current
 		type?: number;
 		id?: number;
+		country?: string;
+		sunrise?: number;
+		sunset?: number;
+		pod?: string; // Part of day (n/d) in forecast
+	};
+	timezone?: number;
+	id?: number;
+	name?: string;
+	cod?: number | string;
+	pop?: number; // Probability of precipitation
+}
+
+export interface ForecastResponse {
+	cod: string;
+	message: number;
+	cnt: number;
+	list: WeatherData[];
+	city: {
+		id: number;
+		name: string;
+		coord: {
+			lat: number;
+			lon: number;
+		};
 		country: string;
+		population: number;
+		timezone: number;
 		sunrise: number;
 		sunset: number;
 	};
-	timezone: number;
-	id: number;
-	name: string;
-	cod: number;
 }

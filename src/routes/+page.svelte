@@ -1,12 +1,14 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
-	import { isApiKeyConfigured, getCurrentWeatherUrl } from '$lib/weather';
-	import type { WeatherData } from '$lib/types';
+	import { isApiKeyConfigured, getCurrentWeatherUrl, getForecastUrl } from '$lib/weather';
+	import type { WeatherData, ForecastResponse } from '$lib/types';
 	import CurrentWeather from '$lib/components/CurrentWeather.svelte';
+	import Forecast from '$lib/components/Forecast.svelte';
 
 	let weatherData = $state<WeatherData | null>(null);
+	let forecastData = $state<ForecastResponse | null>(null);
 	let error = $state<string | null>(null);
-	let loading = $state(false);
+	let loading = $state(true); // Initial load is true
 	let query = $state('');
 
 	const DEFAULT_CITY = 'Colombo';
@@ -24,16 +26,25 @@
 		}
 
 		try {
-			const url = getCurrentWeatherUrl(city);
-			const res = await fetch(url);
-			const data = await res.json();
+			// Fetch both current weather and forecast in parallel
+			const [currentRes, forecastRes] = await Promise.all([
+				fetch(getCurrentWeatherUrl(city)),
+				fetch(getForecastUrl(city))
+			]);
 
-			if (res.ok) {
-				weatherData = data as WeatherData;
-				query = ''; // Clear input on success (optional, or keep it)
+			const currentJson = await currentRes.json();
+			const forecastJson = await forecastRes.json();
+
+			if (currentRes.ok && forecastRes.ok) {
+				weatherData = currentJson as WeatherData;
+				forecastData = forecastJson as ForecastResponse;
+				query = '';
 			} else {
-				error = data.message || 'City not found';
-				weatherData = null; // Clear old data on error? Or keep it? Let's clear to be safe or show error overlay
+				// Use error message from whichever failed
+				const msg = currentJson.message || forecastJson.message || 'City not found';
+				error = msg;
+				weatherData = null;
+				forecastData = null;
 			}
 		} catch (err) {
 			error = `Network error: ${err instanceof Error ? err.message : 'Unknown error'}`;
@@ -113,7 +124,7 @@
 	</header>
 
 	<!-- Content Area -->
-	<div class="w-full max-w-2xl transition-all duration-500 ease-in-out">
+	<div class="w-full max-w-2xl transition-all duration-500 ease-in-out pb-20">
 		{#if loading && !weatherData}
 			<!-- Initial Loading Skeleton -->
 			<div
@@ -133,9 +144,10 @@
 					<p class="text-sm opacity-90">{error}</p>
 				</div>
 			</div>
-		{:else if weatherData}
-			<div class="animate-in fade-in slide-in-from-bottom-8 duration-500">
+		{:else if weatherData && forecastData}
+			<div class="animate-in fade-in slide-in-from-bottom-8 duration-500 space-y-6">
 				<CurrentWeather data={weatherData} />
+				<Forecast data={forecastData} />
 			</div>
 		{/if}
 	</div>
