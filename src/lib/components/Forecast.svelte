@@ -41,14 +41,16 @@
 </script>
 
 <div class="w-full mt-8">
-	<h3 class="text-xl font-bold text-slate-700 mb-4 px-2">5-Day Forecast</h3>
+	<h3 class="text-xl font-bold text-slate-700 dark:text-white mb-4 px-2">5-Day Forecast</h3>
 
 	<div class="grid grid-cols-2 md:grid-cols-5 gap-3">
 		{#each dailyForecasts as day}
 			<div
-				class="bg-white/40 backdrop-blur-md rounded-xl p-4 flex flex-col items-center justify-between gap-2 shadow-sm border border-white/40 transition-transform hover:-translate-y-1 hover:shadow-md"
+				class="bg-white/40 dark:bg-slate-800/40 backdrop-blur-md rounded-xl p-4 flex flex-col items-center justify-between gap-2 shadow-sm border border-white/40 dark:border-white/5 transition-transform hover:-translate-y-1 hover:shadow-md"
 			>
-				<span class="text-sm font-semibold text-slate-600 uppercase tracking-wide">
+				<span
+					class="text-sm font-semibold text-slate-600 dark:text-slate-400 uppercase tracking-wide"
+				>
 					{getDayName(day.dt)}
 				</span>
 
@@ -60,10 +62,10 @@
 				/>
 
 				<div class="text-center">
-					<span class="block text-lg font-bold text-slate-800">
+					<span class="block text-lg font-bold text-slate-800 dark:text-slate-100">
 						{Math.round(day.main.temp_max)}°
 					</span>
-					<span class="block text-xs font-medium text-slate-500">
+					<span class="block text-xs font-medium text-slate-500 dark:text-slate-400">
 						{Math.round(day.main.temp_min)}°
 					</span>
 				</div>
