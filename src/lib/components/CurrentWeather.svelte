@@ -77,4 +77,79 @@
 			/>
 		</div>
 	</div>
+
+	<!-- Weather Details Grid -->
+	<div class="mt-8 grid grid-cols-3 gap-4 border-t border-white/20 pt-8">
+		<!-- Humidity -->
+		<div class="flex flex-col items-center justify-center gap-1 text-center">
+			<span class="text-slate-500 mb-1">
+				<!-- Droplet Icon -->
+				<svg
+					xmlns="http://www.w3.org/2000/svg"
+					width="20"
+					height="20"
+					viewBox="0 0 24 24"
+					fill="none"
+					stroke="currentColor"
+					stroke-width="2.5"
+					stroke-linecap="round"
+					stroke-linejoin="round"
+					class="text-blue-500"
+					><path
+						d="M12 22a7 7 0 0 0 7-7c0-2-2-2.09-2-3.66a7 7 0 0 0-13.7 0c0 1.57-2 1.66-2 3.66a7 7 0 0 0 7 7z"
+					></path></svg
+				>
+			</span>
+			<span class="text-sm font-medium text-slate-500">Humidity</span>
+			<span class="text-lg font-bold text-slate-800">{data.main.humidity}%</span>
+		</div>
+
+		<!-- Wind -->
+		<div class="flex flex-col items-center justify-center gap-1 text-center">
+			<span class="text-slate-500 mb-1">
+				<!-- Wind Icon -->
+				<svg
+					xmlns="http://www.w3.org/2000/svg"
+					width="20"
+					height="20"
+					viewBox="0 0 24 24"
+					fill="none"
+					stroke="currentColor"
+					stroke-width="2.5"
+					stroke-linecap="round"
+					stroke-linejoin="round"
+					class="text-slate-500"
+					><path d="M17.7 7.7a2.5 2.5 0 1 1 1.8 4.3H2" /><path d="M9.6 4.6A2 2 0 1 1 11 8H2" /><path
+						d="M12.6 19.4A2 2 0 1 0 14 16H2"
+					/></svg
+				>
+			</span>
+			<span class="text-sm font-medium text-slate-500">Wind</span>
+			<span class="text-lg font-bold text-slate-800">{Math.round(data.wind.speed * 3.6)} km/h</span>
+		</div>
+
+		<!-- Pressure -->
+		<div class="flex flex-col items-center justify-center gap-1 text-center">
+			<span class="text-slate-500 mb-1">
+				<!-- Gauge/Activity Icon -->
+				<svg
+					xmlns="http://www.w3.org/2000/svg"
+					width="20"
+					height="20"
+					viewBox="0 0 24 24"
+					fill="none"
+					stroke="currentColor"
+					stroke-width="2.5"
+					stroke-linecap="round"
+					stroke-linejoin="round"
+					class="text-purple-500"
+					><path
+						d="M12 20.94c1.61 0 3.09-.59 4.25-1.57l-2.03-3.52A4.99 4.99 0 0 0 12 15a4.99 4.99 0 0 0-2.22.85l-2.03 3.52C8.91 20.35 10.39 20.94 12 20.94z"
+					/><path d="M22 12c0 5.52-4.48 10-10 10S2 17.52 2 12 6.48 2 12 2s10 4.48 10 10z" /></svg
+				>
+			</span>
+			<span class="text-sm font-medium text-slate-500">Pressure</span>
+			<span class="text-lg font-bold text-slate-800">{data.main.pressure} hPa</span>
+		</div>
+	</div>
 </div>
