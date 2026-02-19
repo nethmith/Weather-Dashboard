@@ -2,6 +2,7 @@
 	import { onMount } from 'svelte';
 	import { isApiKeyConfigured, getCurrentWeatherUrl } from '$lib/weather';
 	import type { WeatherData } from '$lib/types';
+	import CurrentWeather from '$lib/components/CurrentWeather.svelte';
 
 	let weatherData = $state<WeatherData | null>(null);
 	let error = $state<string | null>(null);
@@ -25,7 +26,6 @@
 
 			if (res.ok) {
 				weatherData = data as WeatherData;
-				console.log('Weather data received:', weatherData);
 			} else {
 				error = `Error: ${data.message}`;
 				console.error('API Error:', data);
@@ -39,52 +39,40 @@
 	});
 </script>
 
-<div class="flex flex-col items-center justify-center text-center py-16 px-4 gap-8">
+<div class="flex flex-col items-center justify-center py-10 px-4 gap-8">
 	<!-- Hero -->
-	<h2
-		class="text-4xl md:text-5xl font-extrabold text-transparent bg-clip-text bg-gradient-to-br from-slate-700 to-slate-500 drop-shadow-sm"
-	>
-		Check the Weather
-	</h2>
-	<p class="text-lg text-slate-600 max-w-lg leading-relaxed">
-		Get real-time weather updates and a 5-day forecast for any city worldwide.
-	</p>
+	<header class="text-center space-y-2">
+		<h2
+			class="text-3xl md:text-5xl font-extrabold text-transparent bg-clip-text bg-gradient-to-br from-slate-700 to-slate-500 drop-shadow-sm"
+		>
+			Check the Weather
+		</h2>
+		<p class="text-lg text-slate-600 max-w-lg mx-auto leading-relaxed">
+			Real-time weather updates worldwide.
+		</p>
+	</header>
 
-	<!-- Status & Data Display -->
-	<div
-		class="w-full max-w-lg rounded-2xl border border-white/40 bg-white/60 backdrop-blur-lg shadow-lg p-6 text-left space-y-4"
-	>
+	<!-- Content Area -->
+	<div class="w-full max-w-2xl transition-all duration-500 ease-in-out">
 		{#if loading}
-			<div class="flex items-center gap-3 animate-pulse">
-				<div class="h-4 w-4 rounded-full bg-blue-400"></div>
-				<span class="text-slate-600 font-medium">Fetching weather data...</span>
+			<div
+				class="flex flex-col items-center justify-center p-12 rounded-3xl bg-white/40 border border-white/40 shadow-lg backdrop-blur-md animate-pulse"
+			>
+				<div class="h-16 w-16 mb-4 rounded-full bg-slate-200"></div>
+				<div class="h-6 w-48 rounded-full bg-slate-200"></div>
 			</div>
 		{:else if error}
 			<div
-				class="flex items-start gap-3 text-red-600 bg-red-50 p-4 rounded-lg border border-red-100"
+				class="flex items-center gap-4 text-red-700 bg-red-50/90 backdrop-blur-md p-6 rounded-2xl border border-red-200 shadow-lg"
 			>
-				<span class="text-xl">⚠️</span>
-				<p class="font-medium">{error}</p>
+				<span class="text-3xl">⚠️</span>
+				<div>
+					<h3 class="font-bold text-lg">Unable to load weather</h3>
+					<p class="text-sm opacity-90">{error}</p>
+				</div>
 			</div>
 		{:else if weatherData}
-			<div class="space-y-2">
-				<div class="flex items-center gap-2 mb-4">
-					<span class="h-3 w-3 rounded-full bg-emerald-500"></span>
-					<span class="text-sm font-bold uppercase tracking-wider text-slate-500">
-						Data Received for {weatherData.name}
-					</span>
-				</div>
-
-				<div
-					class="bg-slate-900 text-green-400 p-4 rounded-lg font-mono text-xs overflow-x-auto shadow-inner border border-slate-700"
-				>
-					<pre>{JSON.stringify(weatherData, null, 2)}</pre>
-				</div>
-
-				<p class="text-center text-sm text-slate-500 mt-2">
-					Check the browser console (F12) for the object details!
-				</p>
-			</div>
+			<CurrentWeather data={weatherData} />
 		{/if}
 	</div>
 </div>
